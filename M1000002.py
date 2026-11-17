@@ -1,4 +1,6 @@
+import contextlib
 import csv
+import io
 import os
 import sys
 import tempfile
@@ -28,8 +30,9 @@ def get_stock_data(stock_symbol='AAPL', start_date=None, end_date=None):
         raise ValueError('start_date and end_date are required.')
 
     debug_log(f"Fetching {stock_symbol} from {start_date} to {end_date}")
-    ticker = yf.Ticker(stock_symbol)
-    data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=(end_date + pd.Timedelta(days=1)).strftime('%Y-%m-%d'), interval='1d')
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        ticker = yf.Ticker(stock_symbol)
+        data = ticker.history(start=start_date.strftime('%Y-%m-%d'), end=(end_date + pd.Timedelta(days=1)).strftime('%Y-%m-%d'), interval='1d')
 
     if data.empty:
         debug_log(f"yfinance returned no rows for {stock_symbol}")

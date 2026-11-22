@@ -4,9 +4,9 @@ import sys
 import urllib.request
 from pathlib import Path
 
-# This file is the sole writer for stocks.txt.
+# This file is the sole writer for Stock_US.txt.
 BASE_DIR = Path(__file__).resolve().parent
-STOCKS_FILE = BASE_DIR / 'stocks.txt'
+STOCKS_FILE = BASE_DIR / 'Stock_US.txt'
 SCRIPT_NAME = Path(__file__).stem
 DEBUG_MODE = (
     __name__ == '__main__'
@@ -31,7 +31,7 @@ FALLBACK_STOCKS = [
     'T', 'KHC', 'BA', 'LMT', 'RTX', 'NOC', 'HON', 'CVS', 'PFE', 'MRK', 'GILD',
     'LLY', 'JNJ', 'DHR', 'GE', 'SLB', 'SPY', 'QQQ', 'DIA', 'IWM', 'VOO', 'VTI',
     'IVV', 'VTV', 'XLF', 'XLK', 'XLE', 'XLC', 'ES=F', 'NQ=F', 'YM=F', 'RTY=F',
-    'CL=F', 'GC=F', 'SI=F', 'NG=F'
+    'CL=F', 'GC=F', 'SI=F', 'NG=F', 'ANTH.PVT'
 ]
 
 

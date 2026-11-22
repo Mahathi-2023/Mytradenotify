@@ -51,6 +51,37 @@ def get_sender_credentials():
     return sender_email, sender_password
 
 
+def send_alert_email(summary=None, receiver_email='umamaheshwar.chevuru@gmail.com', subject='ATTENTION: Unusual Stock Movement Alert', html=None):
+    sender_email, sender_password = get_sender_credentials()
+    recipients = receiver_email if isinstance(receiver_email, list) else [receiver_email]
+
+    msg = MIMEMultipart()
+    msg['Subject'] = subject
+    msg['From'] = sender_email
+    msg['To'] = ', '.join(recipients)
+
+    if html:
+        msg.attach(MIMEText(html, 'html'))
+    else:
+        msg.attach(MIMEText(summary, 'plain'))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    try:
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, recipients, msg.as_string())
+        debug_log(f"Alert email sent successfully to {recipients}")
+        return True
+    finally:
+        try:
+            server.quit()
+        except smtplib.SMTPResponseException as exc:
+            if exc.smtp_code != 235:
+                raise
+        except (smtplib.SMTPServerDisconnected, OSError):
+            pass
+
+
 def send_stock_report_email(file_paths, receiver_email='umamaheshwar.chevuru@gmail.com', subject='Stock Price Report'):
     sender_email, sender_password = get_sender_credentials()
 

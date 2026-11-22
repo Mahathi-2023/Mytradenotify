@@ -1,0 +1,206 @@
+2026-11-22 00:55:36 [INFO] 127.0.0.1 - - [22/Nov/2026 00:55:36] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:55:37 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:55:37 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:55:37 [INFO] My Trade Notify service application started.
+2026-11-22 00:55:37 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:55:46 [INFO] 127.0.0.1 - - [22/Nov/2026 00:55:46] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:55:48 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:55:48 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:55:48 [INFO] My Trade Notify service application started.
+2026-11-22 00:55:48 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:55:56 [INFO] 127.0.0.1 - - [22/Nov/2026 00:55:56] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:55:58 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:55:58 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:55:58 [INFO] My Trade Notify service application started.
+2026-11-22 00:55:58 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:06 [INFO] 127.0.0.1 - - [22/Nov/2026 00:56:06] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:56:09 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:09 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:56:09 [INFO] My Trade Notify service application started.
+2026-11-22 00:56:09 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:16 [INFO] 127.0.0.1 - - [22/Nov/2026 00:56:16] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:56:19 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:19 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:56:19 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:19 [ERROR] $X: No data found, symbol may be delisted
+2026-11-22 00:56:23 [ERROR] $ANTH.PVT: possibly delisted; no price data found  (period=5d)
+2026-11-22 00:56:23 [INFO] Live alert check completed: 80 stock(s), 0 unusual alert(s).
+2026-11-22 00:56:26 [INFO] 127.0.0.1 - - [22/Nov/2026 00:56:26] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:56:30 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:30 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:56:30 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:36 [INFO] 127.0.0.1 - - [22/Nov/2026 00:56:36] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:56:40 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+ * Tip: There are .env files present. Install python-dotenv to use them.
+ * Serving Flask app 'M1000008'
+ * Debug mode: off
+2026-11-22 00:56:40 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:46 [INFO] 127.0.0.1 - - [22/Nov/2026 00:56:46] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:56:50 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:50 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:56:50 [INFO] My Trade Notify service application started.
+2026-11-22 00:56:50 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:56:56 [INFO] 127.0.0.1 - - [22/Nov/2026 00:56:56] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:57:01 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:01 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:57:01 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:06 [INFO] 127.0.0.1 - - [22/Nov/2026 00:57:06] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:57:11 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:11 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:57:11 [INFO] My Trade Notify service application started.
+2026-11-22 00:57:11 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:16 [INFO] 127.0.0.1 - - [22/Nov/2026 00:57:16] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:57:22 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:22 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:57:22 [INFO] My Trade Notify service application started.
+2026-11-22 00:57:22 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:26 [INFO] 127.0.0.1 - - [22/Nov/2026 00:57:26] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:57:32 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:32 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:57:32 [INFO] My Trade Notify service application started.
+2026-11-22 00:57:32 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:36 [INFO] 127.0.0.1 - - [22/Nov/2026 00:57:36] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:57:43 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:43 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:57:43 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:46 [INFO] 127.0.0.1 - - [22/Nov/2026 00:57:46] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:57:53 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:53 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:57:53 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:57:56 [INFO] 127.0.0.1 - - [22/Nov/2026 00:57:56] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:58:04 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:04 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:58:04 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:06 [INFO] 127.0.0.1 - - [22/Nov/2026 00:58:06] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:58:14 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:14 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:58:14 [INFO] My Trade Notify service application started.
+2026-11-22 00:58:14 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:16 [INFO] 127.0.0.1 - - [22/Nov/2026 00:58:16] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:58:25 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:25 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:58:25 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:26 [INFO] 127.0.0.1 - - [22/Nov/2026 00:58:26] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:58:35 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:35 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:58:35 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:36 [INFO] 127.0.0.1 - - [22/Nov/2026 00:58:36] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:58:46 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:46 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:58:46 [INFO] My Trade Notify service application started.
+2026-11-22 00:58:46 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:46 [INFO] 127.0.0.1 - - [22/Nov/2026 00:58:46] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:58:56 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:56 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:58:56 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:58:56 [INFO] 127.0.0.1 - - [22/Nov/2026 00:58:56] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:59:06 [INFO] 127.0.0.1 - - [22/Nov/2026 00:59:06] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:59:07 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:07 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:59:07 [INFO] My Trade Notify service application started.
+2026-11-22 00:59:07 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:16 [INFO] 127.0.0.1 - - [22/Nov/2026 00:59:16] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:59:17 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:17 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:59:17 [INFO] My Trade Notify service application started.
+2026-11-22 00:59:17 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:26 [INFO] 127.0.0.1 - - [22/Nov/2026 00:59:26] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:59:27 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:27 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:59:27 [INFO] My Trade Notify service application started.
+2026-11-22 00:59:27 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:36 [INFO] 127.0.0.1 - - [22/Nov/2026 00:59:36] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:59:38 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:38 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:59:38 [INFO] My Trade Notify service application started.
+2026-11-22 00:59:38 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:46 [INFO] 127.0.0.1 - - [22/Nov/2026 00:59:46] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:59:48 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:48 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:59:48 [INFO] My Trade Notify service application started.
+2026-11-22 00:59:48 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:56 [INFO] 127.0.0.1 - - [22/Nov/2026 00:59:56] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 00:59:59 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 00:59:59 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 00:59:59 [INFO] My Trade Notify service application started.
+2026-11-22 00:59:59 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:06 [INFO] 127.0.0.1 - - [22/Nov/2026 01:00:06] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:00:09 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:09 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:00:09 [INFO] My Trade Notify service application started.
+2026-11-22 01:00:09 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:16 [INFO] 127.0.0.1 - - [22/Nov/2026 01:00:16] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:00:20 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:20 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:00:20 [INFO] My Trade Notify service application started.
+2026-11-22 01:00:20 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:26 [INFO] 127.0.0.1 - - [22/Nov/2026 01:00:26] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:00:30 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:30 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:00:30 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:36 [INFO] 127.0.0.1 - - [22/Nov/2026 01:00:36] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:00:41 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:41 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:00:41 [INFO] My Trade Notify service application started.
+ * Tip: There are .env files present. Install python-dotenv to use them.
+ * Serving Flask app 'M1000008'
+2026-11-22 01:00:41 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:46 [INFO] 127.0.0.1 - - [22/Nov/2026 01:00:46] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:00:51 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:51 [INFO] My Trade Notify service application started.
+2026-11-22 01:00:51 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:00:56 [INFO] 127.0.0.1 - - [22/Nov/2026 01:00:56] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:01:02 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:02 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:01:02 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:06 [INFO] 127.0.0.1 - - [22/Nov/2026 01:01:06] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:01:12 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:12 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:01:12 [INFO] My Trade Notify service application started.
+2026-11-22 01:01:12 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:16 [INFO] 127.0.0.1 - - [22/Nov/2026 01:01:16] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:01:23 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:23 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:01:23 [INFO] My Trade Notify service application started.
+2026-11-22 01:01:23 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:26 [INFO] 127.0.0.1 - - [22/Nov/2026 01:01:26] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:01:28 [ERROR] $X: No data found, symbol may be delisted
+2026-11-22 01:01:32 [ERROR] $ANTH.PVT: possibly delisted; no price data found  (period=5d)
+2026-11-22 01:01:32 [INFO] Live alert check completed: 80 stock(s), 0 unusual alert(s).
+2026-11-22 01:01:33 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:33 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:01:33 [INFO] My Trade Notify service application started.
+2026-11-22 01:01:33 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:36 [INFO] 127.0.0.1 - - [22/Nov/2026 01:01:36] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:01:43 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:43 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:01:43 [INFO] My Trade Notify service application started.
+2026-11-22 01:01:43 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:46 [INFO] 127.0.0.1 - - [22/Nov/2026 01:01:46] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:01:54 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:54 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:01:54 [INFO] My Trade Notify service application started.
+2026-11-22 01:01:54 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:01:56 [INFO] 127.0.0.1 - - [22/Nov/2026 01:01:56] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:02:04 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:04 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:02:04 [INFO] My Trade Notify service application started.
+ * Tip: There are .env files present. Install python-dotenv to use them.
+ * Serving Flask app 'M1000008'
+ * Debug mode: off
+2026-11-22 01:02:04 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:06 [INFO] 127.0.0.1 - - [22/Nov/2026 01:02:06] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:02:15 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:15 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:02:15 [INFO] My Trade Notify service application started.
+2026-11-22 01:02:15 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:16 [INFO] 127.0.0.1 - - [22/Nov/2026 01:02:16] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:02:25 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:25 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:02:25 [INFO] My Trade Notify service application started.
+2026-11-22 01:02:25 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:26 [INFO] 127.0.0.1 - - [22/Nov/2026 01:02:26] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 01:02:36 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:36 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 01:02:36 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 01:02:36 [INFO] 127.0.0.1 - - [22/Nov/2026 01:02:36] "GET /api/status HTTP/1.1" 200 -

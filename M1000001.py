@@ -10,9 +10,14 @@ from pathlib import Path
 import yfinance as yf
 
 # Read-only access to the text files.
-# Updates to emails.txt and stocks.txt must happen through M1000004.py and M1000005.py.
-from M1000002 import get_stock_data, save_stock_csv
-from M1000003 import send_stock_report_email
+# Updates to emails.txt and Stock_US.txt must happen through M1000004.py and M1000005.py.
+from M1000002 import get_intraday_stock_data, get_stock_data, save_stock_csv
+from M1000003 import send_alert_email, send_stock_report_email
+from M1000007 import (
+    build_alert_html,
+    build_intraday_alert_html,
+    detect_unusual_movement,
+)
 
 BASE_DIR = Path(__file__).resolve().parent
 SCRIPT_NAME = Path(__file__).stem
@@ -49,8 +54,9 @@ def get_receiver_emails():
     return read_list_from_txt('emails.txt') or ['umamaheshwar.chevuru@gmail.com']
 
 
-def get_stock_symbols():
-    return read_list_from_txt('stocks.txt')
+def get_stock_symbols(country='US'):
+    file_name = 'Stock_IN.txt' if str(country).upper() == 'IN' else 'Stock_US.txt'
+    return read_list_from_txt(file_name)
 
 
 @lru_cache(maxsize=256)
@@ -79,6 +85,24 @@ def get_instrument_type(stock_symbol):
     return 'Stock'
 
 
+@lru_cache(maxsize=256)
+def get_stock_name(stock_symbol):
+    symbol = str(stock_symbol).strip().upper()
+    if not symbol:
+        return 'Unknown'
+
+    try:
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()), contextlib.suppress(Exception):
+            info = yf.Ticker(symbol).info or {}
+        name = str(info.get('longName') or info.get('shortName') or '').strip()
+        if name:
+            return name
+    except Exception:
+        pass
+
+    return symbol
+
+
 def build_summary_row(stock_symbol, df):
     if df.empty:
         return None
@@ -97,7 +121,7 @@ def build_summary_row(stock_symbol, df):
         trend = 'No Change'
 
     return {
-        'Stock': stock_symbol,
+        'Stock': get_stock_name(stock_symbol),
         'Type': get_instrument_type(stock_symbol),
         'Start Date': str(summary.iloc[0]['Date']),
         'Start Price': round(start_open, 2),
@@ -107,6 +131,176 @@ def build_summary_row(stock_symbol, df):
         'Trend': trend,
         'Percentage Change': f'{percentage_change:+.2f}%',
     }
+
+
+def get_latest_trading_date(stock_symbols=None):
+    symbols = stock_symbols or get_stock_symbols()
+    candidate_end = date.today()
+    candidate_start = candidate_end - timedelta(days=14)
+
+    for symbol in symbols:
+        df = get_stock_data(stock_symbol=symbol, start_date=candidate_start, end_date=candidate_end)
+        if df is not None and not df.empty:
+            dates = sorted({str(value)[:10] for value in df['Date'].tolist()})
+            if dates:
+                parsed = date.fromisoformat(dates[-1])
+                if parsed <= candidate_end:
+                    return parsed
+
+    latest = candidate_end
+    while latest.weekday() >= 5:
+        latest -= timedelta(days=1)
+    return latest
+
+
+def run_alert(stock_symbols=None, period='month', reference_date=None):
+    if stock_symbols is None:
+        stock_symbols = get_stock_symbols()
+
+    receiver_emails = get_receiver_emails() or ['umamaheshwar.chevuru@gmail.com']
+    today = date.today()
+    normalized_period = str(period).strip().lower()
+    start_date = today if normalized_period == 'day' else today - timedelta(days=29)
+    alerts = []
+
+    for symbol in stock_symbols:
+        df = get_stock_data(stock_symbol=symbol, start_date=start_date, end_date=today)
+        if df is None or df.empty:
+            continue
+
+        alert = detect_unusual_movement(
+            symbol,
+            df,
+            get_stock_name=get_stock_name,
+            get_instrument_type=get_instrument_type,
+        )
+        if alert is not None:
+            alerts.append(alert)
+
+    if not alerts:
+        period_text = 'today' if normalized_period == 'day' else 'the past month'
+        print(f'No unusual stock movements detected for {period_text}.')
+        return False
+
+    send_alert_email(
+        html=build_alert_html(alerts, date_range=str(today) if normalized_period == 'day' else 'past 30 days'),
+        receiver_email=receiver_emails,
+        subject='ATTENTION: Daily Unusual Stock Movement Alert' if normalized_period == 'day' else 'ATTENTION: Unusual Stock Movement Alert'
+    )
+    print(f"Unusual stock movement alert sent to {receiver_emails}")
+    return True
+
+
+INTRADAY_ALERT_PERCENT = 5.0
+
+
+def detect_intraday_alert(stock_symbol, df):
+    if df is None or df.empty:
+        return None
+
+    latest_row = df.iloc[-1]
+    prior_rows = df.iloc[:-1]
+    if prior_rows.empty:
+        return None
+
+    latest_close = float(latest_row['Close'])
+    previous_close = float(prior_rows.iloc[-1]['Close'])
+    if not previous_close:
+        return None
+
+    interval_change = ((latest_close - previous_close) / previous_close) * 100
+    if abs(interval_change) < INTRADAY_ALERT_PERCENT:
+        return None
+
+    movement = 'Sharp Profit' if interval_change > 0 else 'Sharp Loss'
+    return {
+        'Stock': get_stock_name(stock_symbol),
+        'Symbol': str(stock_symbol).strip().upper(),
+        'Movement': movement,
+        'Interval Change': round(interval_change, 2),
+        'Timestamp': str(latest_row['Datetime']),
+        'Previous Close': round(previous_close, 2),
+        'Latest Close': round(latest_close, 2),
+    }
+
+
+def build_intraday_alert_summary(alerts):
+    lines = [
+        'ATTENTION: Live unusual stock movement detected.',
+        'A stock moved unusually within the latest 5-minute interval.',
+        '',
+    ]
+    for alert in alerts:
+        lines.extend([
+            f"- {alert['Stock']} ({alert['Symbol']}): {alert['Movement']}",
+            f"  Time: {alert['Timestamp']}",
+            f"  Previous close: {alert['Previous Close']}",
+            f"  Latest close: {alert['Latest Close']}",
+            f"  5-minute change: {alert['Interval Change']:+.2f}%",
+        ])
+    lines.extend(['', 'Please review the live stock movement carefully.'])
+    return '\n'.join(lines)
+
+
+def run_intraday_alerts(stock_symbols=None):
+    if stock_symbols is None:
+        stock_symbols = get_stock_symbols()
+
+    receiver_emails = get_receiver_emails() or ['umamaheshwar.chevuru@gmail.com']
+    alerts = []
+
+    for symbol in stock_symbols:
+        df = get_intraday_stock_data(symbol, interval='5m')
+        alert = detect_intraday_alert(symbol, df)
+        if alert is not None:
+            alerts.append(alert)
+
+    if not alerts:
+        return False
+
+    send_alert_email(
+        html=build_intraday_alert_html(alerts),
+        receiver_email=receiver_emails,
+        subject='URGENT: Live Unusual Stock Movement Alert'
+    )
+    return True
+
+
+def monitor_intraday_alerts(stock_symbols=None, interval_seconds=300):
+    import time
+
+    if stock_symbols is None:
+        stock_symbols = get_stock_symbols()
+
+    print(f"Starting 5-minute stock monitoring for {len(stock_symbols)} stocks. Press Ctrl+C to stop.")
+    sent_alerts = set()
+
+    try:
+        while True:
+            receiver_emails = get_receiver_emails() or ['umamaheshwar.chevuru@gmail.com']
+            alerts = []
+
+            for symbol in stock_symbols:
+                df = get_intraday_stock_data(symbol, interval='5m')
+                alert = detect_intraday_alert(symbol, df)
+                if alert is None:
+                    continue
+
+                alert_key = (alert['Symbol'], alert['Movement'], alert['Timestamp'])
+                if alert_key not in sent_alerts:
+                    sent_alerts.add(alert_key)
+                    alerts.append(alert)
+
+            if alerts:
+                send_alert_email(
+                    html=build_intraday_alert_html(alerts),
+                    receiver_email=receiver_emails,
+                    subject='URGENT: Live Unusual Stock Movement Alert'
+                )
+
+            time.sleep(interval_seconds)
+    except KeyboardInterrupt:
+        print('Intraday stock monitoring stopped.')
 
 
 def sort_percentage_rows(rows, for_profit=True):
@@ -133,6 +327,10 @@ def collect_rows_for_period(stock_symbols, start_date, end_date):
 
         summary_row = build_summary_row(symbol, df)
         if summary_row is not None:
+            if start_date == end_date:
+                summary_row['DT'] = start_date.strftime('%Y-%m-%d')
+            else:
+                summary_row['DT'] = f"{start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}"
             rows.append(summary_row)
             debug_log(f"Row prepared for {symbol}: {summary_row}")
 
@@ -173,7 +371,7 @@ def normalize_report_type(report_type):
     return aliases[normalized]
 
 
-def run_report(report_type='day', stock_symbols=None):
+def run_report(report_type='day', stock_symbols=None, force_month=False):
     normalized_type = normalize_report_type(report_type)
     if stock_symbols is None:
         stock_symbols = get_stock_symbols()
@@ -184,10 +382,15 @@ def run_report(report_type='day', stock_symbols=None):
     today = date.today()
 
     if normalized_type == 'day':
-        end_date = today
-        start_date = today
+        report_date = get_latest_trading_date(stock_symbols)
+        end_date = report_date
+        start_date = report_date
         rows = collect_rows_for_period(stock_symbols, start_date, end_date)
         report_files = build_report_files(rows, file_prefix='daily')
+
+        # Run unusual-movement scanning during the normal daily report.
+        # The standalone 'alert' command remains available for manual runs.
+        alert_sent = run_alert(stock_symbols=stock_symbols, period='day', reference_date=report_date)
 
         if is_last_day_of_month(today):
             month_start = date(today.year, today.month, 1)
@@ -202,7 +405,7 @@ def run_report(report_type='day', stock_symbols=None):
                     subject='Daily and Monthly Profit and Loss Stocks Report'
                 )
                 print(f'Combined daily and monthly profit and loss report sent to {receiver_emails}')
-                return
+                return {'report_sent': True, 'alert_sent': alert_sent}
 
         if report_files:
             debug_log(f"Sending report email with attachments: {report_files}")
@@ -212,13 +415,15 @@ def run_report(report_type='day', stock_symbols=None):
                 subject='Daily Profit and Loss Stocks Report'
             )
             print(f'Daily profit and loss report sent to {receiver_emails}')
+            return {'report_sent': True, 'alert_sent': alert_sent}
         else:
             print('No profit or loss rows found for the selected daily period.')
+            return {'report_sent': False, 'alert_sent': alert_sent}
         return
 
     if normalized_type == 'month':
         last_day = monthrange(today.year, today.month)[1]
-        if today.day != last_day:
+        if today.day != last_day and not force_month:
             print(f"Skipping monthly report for {today}: not the end of the month ({today.day}/{last_day}).")
             return
 
@@ -260,6 +465,12 @@ if __name__ == '__main__':
             raise SystemExit(0)
         if command in {'month', 'monthly'}:
             run_report(report_type='month')
+            raise SystemExit(0)
+        if command in {'alert', 'alerts'}:
+            run_alert()
+            raise SystemExit(0)
+        if command in {'live-alert', 'live-alerts', 'monitor'}:
+            monitor_intraday_alerts()
             raise SystemExit(0)
 
     run_report(report_type='day')

@@ -6242,3 +6242,14 @@ Port 5001 is in use by another program. Either identify and stop that program, o
 Address already in use
 2026-11-22 22:35:30 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
 Port 5001 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2026-11-22 22:35:40 [INFO] 127.0.0.1 - - [22/Nov/2026 22:35:40] "GET /api/status HTTP/1.1" 200 -
+2026-11-22 22:35:41 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+2026-11-22 22:35:41 [INFO] Background schedulers started: daily, live-alert, and log-maintenance.
+2026-11-22 22:35:41 [INFO] My Trade Notify service application started.
+ * Tip: There are .env files present. Install python-dotenv to use them.
+ * Serving Flask app 'M1000008'
+ * Debug mode: off
+Address already in use
+2026-11-22 22:35:41 [INFO] Log retention cleanup complete: kept the last 7 calendar days.
+Port 5001 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2026-11-22 22:35:50 [INFO] 127.0.0.1 - - [22/Nov/2026 22:35:50] "GET /api/status HTTP/1.1" 200 -

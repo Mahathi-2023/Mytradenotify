@@ -153,12 +153,12 @@ def get_latest_trading_date(stock_symbols=None):
     return latest
 
 
-def run_alert(stock_symbols=None, period='month', reference_date=None):
+def run_alert(stock_symbols=None, period='month', reference_date=None, send_no_activity_email=False):
     if stock_symbols is None:
         stock_symbols = get_stock_symbols()
 
     receiver_emails = get_receiver_emails() or ['umamaheshwar.chevuru@gmail.com']
-    today = date.today()
+    today = reference_date if isinstance(reference_date, date) else date.today()
     normalized_period = str(period).strip().lower()
     start_date = today if normalized_period == 'day' else today - timedelta(days=29)
     alerts = []
@@ -180,6 +180,21 @@ def run_alert(stock_symbols=None, period='month', reference_date=None):
     if not alerts:
         period_text = 'today' if normalized_period == 'day' else 'the past month'
         print(f'No unusual stock movements detected for {period_text}.')
+        if send_no_activity_email:
+            date_range = str(today) if normalized_period == 'day' else 'past 30 days'
+            send_alert_email(
+                html=(
+                    f"<html><body style=\"font-family:Arial,sans-serif;color:#172033\">"
+                    f"<h2 style=\"text-align:center;color:#166534\">Unusual Stock Movement Alert</h2>"
+                    f"<p style=\"margin:0 0 8px 0\">Report period: {date_range}</p>"
+                    "<p>No unusual stock movements were detected in this period.</p>"
+                    "</body></html>"
+                ),
+                receiver_email=receiver_emails,
+                subject='Daily Unusual Stock Movement Alert',
+            )
+            print(f"No-activity unusual movement alert sent to {receiver_emails}")
+            return True
         return False
 
     send_alert_email(
@@ -222,24 +237,6 @@ def detect_intraday_alert(stock_symbol, df):
         'Previous Close': round(previous_close, 2),
         'Latest Close': round(latest_close, 2),
     }
-
-
-def build_intraday_alert_summary(alerts):
-    lines = [
-        'ATTENTION: Live unusual stock movement detected.',
-        'A stock moved unusually within the latest 5-minute interval.',
-        '',
-    ]
-    for alert in alerts:
-        lines.extend([
-            f"- {alert['Stock']} ({alert['Symbol']}): {alert['Movement']}",
-            f"  Time: {alert['Timestamp']}",
-            f"  Previous close: {alert['Previous Close']}",
-            f"  Latest close: {alert['Latest Close']}",
-            f"  5-minute change: {alert['Interval Change']:+.2f}%",
-        ])
-    lines.extend(['', 'Please review the live stock movement carefully.'])
-    return '\n'.join(lines)
 
 
 def run_intraday_alerts(stock_symbols=None):
@@ -388,9 +385,14 @@ def run_report(report_type='day', stock_symbols=None, force_month=False):
         rows = collect_rows_for_period(stock_symbols, start_date, end_date)
         report_files = build_report_files(rows, file_prefix='daily')
 
-        # Run unusual-movement scanning during the normal daily report.
+        # Daily report includes the same 30-day unusual-movement scan shown in the dashboard text.
         # The standalone 'alert' command remains available for manual runs.
-        alert_sent = run_alert(stock_symbols=stock_symbols, period='day', reference_date=report_date)
+        alert_sent = run_alert(
+            stock_symbols=stock_symbols,
+            period='month',
+            reference_date=report_date,
+            send_no_activity_email=True,
+        )
 
         if is_last_day_of_month(today):
             month_start = date(today.year, today.month, 1)
@@ -402,7 +404,8 @@ def run_report(report_type='day', stock_symbols=None, force_month=False):
                 send_stock_report_email(
                     file_paths=combined_files,
                     receiver_email=receiver_emails,
-                    subject='Daily and Monthly Profit and Loss Stocks Report'
+                    subject='Daily and Monthly Profit and Loss Stocks Report',
+                    report_date=today,
                 )
                 print(f'Combined daily and monthly profit and loss report sent to {receiver_emails}')
                 return {'report_sent': True, 'alert_sent': alert_sent}
@@ -412,14 +415,14 @@ def run_report(report_type='day', stock_symbols=None, force_month=False):
             send_stock_report_email(
                 file_paths=report_files,
                 receiver_email=receiver_emails,
-                subject='Daily Profit and Loss Stocks Report'
+                subject='Daily Profit and Loss Stocks Report',
+                report_date=report_date,
             )
             print(f'Daily profit and loss report sent to {receiver_emails}')
             return {'report_sent': True, 'alert_sent': alert_sent}
         else:
             print('No profit or loss rows found for the selected daily period.')
             return {'report_sent': False, 'alert_sent': alert_sent}
-        return
 
     if normalized_type == 'month':
         last_day = monthrange(today.year, today.month)[1]
@@ -439,12 +442,14 @@ def run_report(report_type='day', stock_symbols=None, force_month=False):
             send_stock_report_email(
                 file_paths=report_files,
                 receiver_email=receiver_emails,
-                subject='Monthly Profit and Loss Stocks Report'
+                subject='Monthly Profit and Loss Stocks Report',
+                report_date=end_date,
             )
             print(f'Monthly profit and loss report sent to {receiver_emails}')
+            return {'report_sent': True}
         else:
             print('No profit or loss rows found for the selected monthly period.')
-        return
+            return {'report_sent': False}
 
     raise ValueError("report_type must be 'day'/'daily' or 'month'/'monthly'")
 

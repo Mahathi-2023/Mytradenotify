@@ -27,7 +27,7 @@ logger = logging.getLogger('MyTradeNotify')
 app = Flask(__name__)
 load_environment_file()
 app.secret_key = os.environ.get('MYTRADE_DASHBOARD_SECRET_KEY') or os.urandom(32)
-STATE_FILE = Path(__file__).resolve().parent / 'service_state.json'
+STATE_FILE = Path(__file__).resolve().parent / 'M1000013.json'
 ensure_admin()
 
 service_status = {
@@ -37,6 +37,9 @@ service_status = {
     'last_live_alert_check': None,
     'last_unusual_alert': None,
     'last_error': None,
+    'dashboard_notice': None,
+    'dashboard_notice_level': None,
+    'dashboard_notice_expires_at': None,
     'running': True,
     'selected_country': 'US',
     'selected_country_name': 'United States',
@@ -61,61 +64,95 @@ def save_service_state(state):
     STATE_FILE.write_text(json.dumps(state, indent=2), encoding='utf-8')
 
 
+def get_country_schedule(country):
+    selected = str(country or 'US').upper()
+    if selected == 'IN':
+        return {
+            'country': 'IN',
+            'timezone': ZoneInfo('Asia/Kolkata'),
+            'open_hour': 9,
+            'open_minute': 15,
+            'close_hour': 15,
+            'close_minute': 35,
+        }
+    return {
+        'country': 'US',
+        'timezone': ZoneInfo('America/New_York'),
+        'open_hour': 9,
+        'open_minute': 30,
+        'close_hour': 16,
+        'close_minute': 5,
+    }
+
+
 def run_daily_jobs():
-    eastern = ZoneInfo('America/New_York')
     persisted_state = load_service_state()
 
-    startup_now = datetime.now(eastern)
-    startup_key = f'close:{startup_now.date().isoformat()}' if startup_now.hour >= 16 else f'open:{startup_now.date().isoformat()}'
-    startup_session_key = 'last_daily_close_key' if startup_now.hour >= 16 else 'last_daily_key'
+    startup_schedule = get_country_schedule(service_status.get('selected_country', 'US'))
+    startup_country = startup_schedule['country']
+    startup_now = datetime.now(startup_schedule['timezone'])
+    startup_is_close_window = (
+        startup_now.hour > startup_schedule['close_hour']
+        or (startup_now.hour == startup_schedule['close_hour'] and startup_now.minute >= startup_schedule['close_minute'])
+    )
+    startup_key = f"{startup_country}:{'close' if startup_is_close_window else 'open'}:{startup_now.date().isoformat()}"
+    startup_session_key = f"{startup_country}:last_daily_close_key" if startup_is_close_window else f"{startup_country}:last_daily_key"
 
     if startup_now.weekday() < 5 and persisted_state.get(startup_session_key) != startup_key:
         try:
-            M1000001.run_report(report_type='day')
+            M1000001.run_report(
+                report_type='day',
+                stock_symbols=M1000001.get_stock_symbols(startup_country),
+            )
             persisted_state[startup_session_key] = startup_key
             save_service_state(persisted_state)
             service_status['last_daily_report'] = startup_now.isoformat(timespec='seconds')
-            logger.info('Startup daily report triggered.')
+            logger.info('Startup daily report triggered for %s market.', startup_country)
         except Exception as exc:
             service_status['last_error'] = f'{type(exc).__name__}: {exc}'
 
     while service_status['running']:
-        now = datetime.now(eastern)
+        schedule = get_country_schedule(service_status.get('selected_country', 'US'))
+        selected_country = schedule['country']
+        now = datetime.now(schedule['timezone'])
         today_key = now.date().isoformat()
         month_key = now.strftime('%Y-%m')
 
         try:
-            open_key = f'open:{today_key}'
-            close_key = f'close:{today_key}'
+            open_key = f'{selected_country}:open:{today_key}'
+            close_key = f'{selected_country}:close:{today_key}'
+            daily_open_state_key = f'{selected_country}:last_daily_key'
+            daily_close_state_key = f'{selected_country}:last_daily_close_key'
+            monthly_state_key = f'{selected_country}:last_monthly_key'
 
-            if (now.weekday() < 5 and now.hour == 9 and now.minute == 30 and
-                    persisted_state.get('last_daily_key') != open_key):
-                logger.info('Scheduled daily report started (market open).')
-                M1000001.run_report(report_type='day')
-                logger.info('Scheduled daily report completed (market open).')
-                persisted_state['last_daily_key'] = open_key
+            if (now.weekday() < 5 and now.hour == schedule['open_hour'] and now.minute == schedule['open_minute'] and
+                    persisted_state.get(daily_open_state_key) != open_key):
+                logger.info('Scheduled daily report started (%s market open).', selected_country)
+                M1000001.run_report(report_type='day', stock_symbols=M1000001.get_stock_symbols(selected_country))
+                logger.info('Scheduled daily report completed (%s market open).', selected_country)
+                persisted_state[daily_open_state_key] = open_key
                 save_service_state(persisted_state)
                 service_status['last_daily_report'] = now.isoformat(timespec='seconds')
-                logger.info('Scheduled daily report triggered (morning).')
+                logger.info('Scheduled daily report triggered (%s morning).', selected_country)
 
-            if (now.weekday() < 5 and now.hour == 16 and now.minute == 5 and
-                    persisted_state.get('last_daily_close_key') != close_key):
-                logger.info('Scheduled daily report started (market close).')
-                M1000001.run_report(report_type='day')
-                logger.info('Scheduled daily report completed (market close).')
-                persisted_state['last_daily_close_key'] = close_key
+            if (now.weekday() < 5 and now.hour == schedule['close_hour'] and now.minute == schedule['close_minute'] and
+                    persisted_state.get(daily_close_state_key) != close_key):
+                logger.info('Scheduled daily report started (%s market close).', selected_country)
+                M1000001.run_report(report_type='day', stock_symbols=M1000001.get_stock_symbols(selected_country))
+                logger.info('Scheduled daily report completed (%s market close).', selected_country)
+                persisted_state[daily_close_state_key] = close_key
                 save_service_state(persisted_state)
                 service_status['last_daily_report'] = now.isoformat(timespec='seconds')
-                logger.info('Scheduled daily report triggered (afternoon).')
+                logger.info('Scheduled daily report triggered (%s afternoon).', selected_country)
 
             if (now.day == monthrange(now.year, now.month)[1] and
-                    now.hour == 9 and now.minute == 30 and
-                    persisted_state.get('last_monthly_key') != month_key):
-                M1000001.run_report(report_type='month')
-                persisted_state['last_monthly_key'] = month_key
+                    now.hour == schedule['open_hour'] and now.minute == schedule['open_minute'] and
+                    persisted_state.get(monthly_state_key) != f'{selected_country}:{month_key}'):
+                M1000001.run_report(report_type='month', stock_symbols=M1000001.get_stock_symbols(selected_country))
+                persisted_state[monthly_state_key] = f'{selected_country}:{month_key}'
                 save_service_state(persisted_state)
                 service_status['last_monthly_report'] = now.isoformat(timespec='seconds')
-                logger.info('Scheduled monthly report triggered.')
+                logger.info('Scheduled monthly report triggered for %s market.', selected_country)
         except Exception as exc:
             service_status['last_error'] = f'{type(exc).__name__}: {exc}'
 
@@ -124,11 +161,18 @@ def run_daily_jobs():
 
 def run_live_alert_jobs():
     sent_alert_keys = set()
+    first_run = True
 
     while service_status['running']:
+        if first_run:
+            # Keep startup time separate from the first live-check timestamp.
+            time.sleep(300)
+            first_run = False
+
         check_time = datetime.now().isoformat(timespec='seconds')
         try:
-            stock_symbols = M1000001.get_stock_symbols()
+            selected_country = str(service_status.get('selected_country', 'US')).upper()
+            stock_symbols = M1000001.get_stock_symbols(selected_country)
             alerts = []
 
             for symbol in stock_symbols:
@@ -137,7 +181,7 @@ def run_live_alert_jobs():
                 if alert is None:
                     continue
 
-                key = (alert['Symbol'], alert['Movement'], alert['Timestamp'])
+                key = (selected_country, alert['Symbol'], alert['Movement'], alert['Timestamp'])
                 if key not in sent_alert_keys:
                     sent_alert_keys.add(key)
                     alerts.append(alert)

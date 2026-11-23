@@ -114,7 +114,6 @@ def save_stock_excel(rows, file_name='apple_stock_report.xlsx'):
         column_widths = [18, 20, 15, 15, 15, 15, 15, 20]
     else:
         fieldnames = [
-            'DT',
             'Stock',
             'Type',
             'Start Date',
@@ -125,7 +124,7 @@ def save_stock_excel(rows, file_name='apple_stock_report.xlsx'):
             'Trend',
             'Percentage Change',
         ]
-        column_widths = [28, 20, 15, 15, 15, 15, 15, 15, 15, 20]
+        column_widths = [20, 15, 15, 15, 15, 15, 15, 15, 20]
 
     # Write header row
     for col_num, (header, width) in enumerate(zip(fieldnames, column_widths), start=1):
@@ -157,7 +156,7 @@ def save_stock_csv(rows, file_name='apple_stock_report.csv'):
         if 'daily' in lower_name:
             fieldnames = ['DT', 'Stock', 'Type', 'Start Price', 'End Price', 'Difference', 'Trend', 'Percentage Change']
         else:
-            fieldnames = ['DT', 'Stock', 'Type', 'Start Date', 'Start Price', 'End Date', 'End Price', 'Difference', 'Trend', 'Percentage Change']
+            fieldnames = ['Stock', 'Type', 'Start Date', 'Start Price', 'End Date', 'End Price', 'Difference', 'Trend', 'Percentage Change']
 
         report_name = 'Daily' if 'daily' in lower_name else 'Monthly' if 'monthly' in lower_name else 'Stock'
         trend_name = 'Profit' if 'profit' in lower_name else 'Loss'
@@ -187,7 +186,7 @@ def save_stock_csv(rows, file_name='apple_stock_report.csv'):
     if 'daily' in lower_name:
         fieldnames = ['DT', 'Stock', 'Type', 'Start Price', 'End Price', 'Difference', 'Trend', 'Percentage Change']
     else:
-        fieldnames = ['DT', 'Stock', 'Type', 'Start Date', 'Start Price', 'End Date', 'End Price', 'Difference', 'Trend', 'Percentage Change']
+        fieldnames = ['Stock', 'Type', 'Start Date', 'Start Price', 'End Date', 'End Price', 'Difference', 'Trend', 'Percentage Change']
 
     workbook = Workbook()
     worksheet = workbook.active

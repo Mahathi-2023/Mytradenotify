@@ -5,7 +5,7 @@ ALERT_DAILY_CHANGE_PERCENT = 5.0
 
 
 def detect_unusual_movement(stock_symbol, df, get_stock_name=None, get_instrument_type=None):
-    if df is None or df.empty or len(df) < 2:
+    if df is None or df.empty:
         return None
 
     start_open = float(df.iloc[0]['Open'])
@@ -18,7 +18,15 @@ def detect_unusual_movement(stock_symbol, df, get_stock_name=None, get_instrumen
         if previous_close:
             daily_changes.append((close - previous_close) / previous_close * 100)
 
-    largest_daily_change = max(daily_changes, key=abs) if daily_changes else 0.0
+    session_changes = []
+    for _, row in df.iterrows():
+        open_price = float(row['Open'])
+        close_price = float(row['Close'])
+        if open_price:
+            session_changes.append((close_price - open_price) / open_price * 100)
+
+    combined_daily_changes = daily_changes + session_changes
+    largest_daily_change = max(combined_daily_changes, key=abs) if combined_daily_changes else 0.0
 
     unusual = abs(monthly_change) >= ALERT_MONTHLY_CHANGE_PERCENT
     unusual = unusual or abs(largest_daily_change) >= ALERT_DAILY_CHANGE_PERCENT
@@ -26,11 +34,13 @@ def detect_unusual_movement(stock_symbol, df, get_stock_name=None, get_instrumen
         return None
 
     if monthly_change > 0:
-        movement = 'High Profit'
+        movement = 'Profit'
     elif monthly_change < 0:
-        movement = 'High Loss'
+        movement = 'Loss'
+    elif largest_daily_change > 0:
+        movement = 'Profit'
     else:
-        movement = 'Unusual Movement'
+        movement = 'Loss'
 
     symbol = str(stock_symbol).strip().upper()
     stock_name = get_stock_name(symbol) if get_stock_name else symbol
@@ -48,27 +58,6 @@ def detect_unusual_movement(stock_symbol, df, get_stock_name=None, get_instrumen
         'Start Price': round(start_open, 2),
         'End Price': round(end_close, 2),
     }
-
-
-def build_alert_summary(alerts):
-    lines = [
-        'ATTENTION: Unusual stock price movement detected.',
-        'The following movements were identified over the past month.',
-        '',
-    ]
-
-    for alert in alerts:
-        direction = 'profit' if alert['Monthly Change'] > 0 else 'loss'
-        lines.extend([
-            f"- {alert['Stock']} ({alert['Symbol']}): {alert['Movement']}",
-            f"  Period: {alert['Start Date']} to {alert['End Date']}",
-            f"  Price: {alert['Start Price']} to {alert['End Price']}",
-            f"  Monthly change: {alert['Monthly Change']:+.2f}% ({direction})",
-            f"  Largest daily change: {alert['Largest Daily Change']:+.2f}%",
-        ])
-
-    lines.extend(['', 'Please review these stocks and market conditions carefully.'])
-    return '\n'.join(lines)
 
 
 def build_alert_html(alerts, date_range='past 30 days'):

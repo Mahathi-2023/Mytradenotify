@@ -1,6 +1,7 @@
 import os
 import smtplib
 import sys
+from datetime import date
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -82,7 +83,7 @@ def send_alert_email(summary=None, receiver_email='umamaheshwar.chevuru@gmail.co
             pass
 
 
-def send_stock_report_email(file_paths, receiver_email='umamaheshwar.chevuru@gmail.com', subject='Stock Price Report'):
+def send_stock_report_email(file_paths, receiver_email='umamaheshwar.chevuru@gmail.com', subject='Stock Price Report', report_date=None):
     sender_email, sender_password = get_sender_credentials()
 
     if isinstance(file_paths, (str, Path)):
@@ -95,7 +96,31 @@ def send_stock_report_email(file_paths, receiver_email='umamaheshwar.chevuru@gma
     msg['Subject'] = subject
     msg['From'] = sender_email
     msg['To'] = ', '.join(recipients)
-    msg.attach(MIMEText('Profit and loss stock details are attached in the CSV files.', 'plain'))
+
+    if isinstance(report_date, date):
+        formatted_date = report_date.isoformat()
+    elif report_date:
+        formatted_date = str(report_date)
+    else:
+        formatted_date = date.today().isoformat()
+
+    plain_body = (
+        f"Date: {formatted_date}\n\n"
+        'Profit and loss stock details are attached in the CSV files.'
+    )
+    html_body = f"""
+    <html>
+      <body style="font-family:Arial,sans-serif;color:#172033">
+        <h2 style="text-align:center;color:#1f2937;margin-bottom:8px">{subject}</h2>
+        <p style="text-align:left;margin-top:0;margin-bottom:12px"><strong>Date:</strong> {formatted_date}</p>
+        <p>Profit and loss stock details are attached in the CSV files.</p>
+      </body>
+    </html>
+    """
+    body_part = MIMEMultipart('alternative')
+    body_part.attach(MIMEText(plain_body, 'plain'))
+    body_part.attach(MIMEText(html_body, 'html'))
+    msg.attach(body_part)
 
     attachment_paths = [Path(path) for path in file_paths]
     debug_log(f"Attachments to send: {[p.name for p in attachment_paths]}")
